@@ -1,0 +1,19 @@
+# This file contains general metadata about the project.
+
+@prefix : <http://usefulinc.com/ns/doap#>.
+
+`MooX-Traits`
+	:programming-language "Perl" ;
+	:shortdesc            "automatically apply roles at object creation time";
+	:homepage             <https://metacpan.org/release/MooX-Traits>;
+	:download-page        <https://metacpan.org/release/MooX-Traits>;
+	:bug-database         <http://rt.cpan.org/Dist/Display.html?Queue=MooX-Traits>;
+#	:repository           [ a :GitRepository; :browse <https://github.com/tobyink/p5-moox-traits> ];
+	:created              2014-05-24;
+	:license              <http://dev.perl.org/licenses/>;
+	:maintainer           cpan:TOBYINK;
+	:developer            cpan:TOBYINK.
+
+<http://dev.perl.org/licenses/>
+	dc:title  "the same terms as the perl 5 programming language system itself".
+

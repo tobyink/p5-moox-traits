@@ -1,0 +1,167 @@
+use 5.006;
+use strict;
+use warnings;
+
+package MooX::Traits;
+
+our $AUTHORITY = 'cpan:TOBYINK';
+our $VERSION   = '0.001';
+
+use Role::Tiny;
+
+my $toolage = sub
+{
+	my $class = shift;
+	
+	if ($INC{"Moo.pm"} and $Moo::MAKERS{$class}{is_class})
+	{
+		require Moo::Role;
+		return "Moo::Role";
+	}
+	
+	if ($INC{"Moo/Role.pm"})
+	{
+		return "Moo::Role";
+	}
+	
+	"Role::Tiny";
+};
+
+sub _trait_namespace
+{
+	();
+}
+
+sub with_traits
+{
+	my $class = shift;
+	
+	my $ns = $class->_trait_namespace;
+	$ns = defined($ns) ? "$ns\::" : "";
+	my @traits = map /\A\+(.+)\z/ ? $1 : "$ns$_", @_;
+	
+	$class->$toolage->create_class_with_roles($class, @traits);
+}
+
+sub new_with_traits
+{
+	my $class = shift;
+	my (%args, $pass_as_ref);
+	if (@_==1 and ref($_[0]) eq 'HASH')
+	{
+		%args = %{$_[0]};
+		$pass_as_ref = !!1;
+	}
+	else
+	{
+		%args = @_;
+		$pass_as_ref = !!0;
+	}
+	
+	my @traits = @{ delete($args{traits}) or [] };
+	$class->with_traits(@traits)->new( $pass_as_ref ? \%args : %args );
+}
+
+1;
+
+__END__
+
+=pod
+
+=encoding utf-8
+
+=for stopwords MooseX MouseX prepend
+
+=head1 NAME
+
+MooX::Traits - automatically apply roles at object creation time
+
+=head1 SYNOPSIS
+
+Given some roles:
+
+   package Role;
+   use Moo::Role;
+   has foo => ( is => 'ro', required => 1 );
+
+And a class:
+
+   package Class;
+   use Moo;
+   with 'MooX::Traits';
+
+Apply the roles to the class at new time:
+
+   my $object = Class->with_traits('Role')->new( foo => 42 );
+
+Then use your customized class:
+
+   $object->isa('Class'); # true
+   $object->does('Role'); # true
+   $object->foo; # 42
+
+=head1 DESCRIPTION
+
+Was any of the SYNOPSIS unexpected? Basically, this module is the same
+thing as L<MooseX::Traits> and L<MouseX::Traits>, only for L<Moo>.
+I<Quelle surprise>, right?
+
+=head2 Methods
+
+=over
+
+=item C<< $class->with_traits( @traits ) >>
+
+Return a new class name with the traits applied.
+
+=item C<< $class->new_with_traits(%args, traits => \@traits) >>
+
+C<new_with_traits> can also take a hashref, e.g.:
+
+   my $instance = $class->new_with_traits({ traits => \@traits, foo => 'bar' });
+
+This method exists for compatibility with the MooseX and MouseX
+equivalents of this module, but generally speaking you should prefer
+to use C<with_traits>.
+
+=item C<< $class->_trait_namespace >>
+
+This returns undef, but you can override it in your class to
+automatically prepend a namespace to supplied traits.
+
+This differs slightly from the MooseX and MouseX versions of this
+module which have C<_trait_namespace> as an attribute instead of
+a method.
+
+=back
+
+=head1 BUGS
+
+Please report any bugs to
+L<http://rt.cpan.org/Dist/Display.html?Queue=MooX-Traits>.
+
+=head1 SEE ALSO
+
+L<Moo::Role>,
+L<Role::Tiny>.
+
+L<MooseX::Traits>,
+L<MouseX::Traits>.
+
+=head1 AUTHOR
+
+Toby Inkster E<lt>tobyink@cpan.orgE<gt>.
+
+=head1 COPYRIGHT AND LICENCE
+
+This software is copyright (c) 2014 by Toby Inkster.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
+
+=head1 DISCLAIMER OF WARRANTIES
+
+THIS PACKAGE IS PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR IMPLIED
+WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF
+MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+

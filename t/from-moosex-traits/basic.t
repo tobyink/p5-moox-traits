@@ -1,3 +1,4 @@
+## skip Test::Tabs
 use strict;
 use warnings;
 use Test::Requires { 'Test::Fatal' => '0' };

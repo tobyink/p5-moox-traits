@@ -9,6 +9,51 @@ our $VERSION   = '0.001';
 
 use Role::Tiny;
 
+sub _trait_namespace
+{
+	();
+}
+
+my @keepsies;
+my $_resolve_trait = sub
+{
+	my $class = shift;
+	my ($ns, $trait, $ref) = @_;
+	my $has_ref = (@_ == 3);
+	
+	my $package = ($trait =~ /\A\+(.+)\z/)
+		? $1
+		: "$ns$trait";
+	
+	return $package unless $has_ref;
+	
+	require Module::Runtime;
+	Module::Runtime::use_package_optimistically($package);
+	
+	if ( $INC{'MooseX/Role/Parameterized.pm'} )
+	{
+		require Moose::Util;
+		my $meta = Moose::Util::find_meta($package);
+		if ($meta->can('generate_role'))
+		{
+			my $generated = $meta->generate_role(parameters => $ref);
+			push @keepsies, $generated; # prevent cleanup
+			return $generated->name;
+		}
+	}
+	
+	if ( $trait->can("make_variant") )
+	{
+		require Package::Variant;
+		return "Package::Variant"->build_variant_of(
+			$trait,
+			ref($ref) eq q(ARRAY) ? @$ref : ref($ref) eq q(HASH) ? %$ref : $$ref,
+		);
+	}
+	
+	return $trait;
+};
+
 my $toolage = sub
 {
 	my $class = shift;
@@ -27,18 +72,25 @@ my $toolage = sub
 	"Role::Tiny";
 };
 
-sub _trait_namespace
-{
-	();
-}
-
 sub with_traits
 {
 	my $class = shift;
 	
+	return $class unless @_;
+	
 	my $ns = $class->_trait_namespace;
 	$ns = defined($ns) ? "$ns\::" : "";
-	my @traits = map /\A\+(.+)\z/ ? $1 : "$ns$_", @_;
+	
+	my @traits;
+	while (@_)
+	{
+		my $trait = shift;
+		push @traits, $class->$_resolve_trait(
+			$ns,
+			$trait,
+			ref($_[0]) ? shift : (),
+		);
+	}
 	
 	$class->$toolage->create_class_with_roles($class, @traits);
 }
@@ -58,7 +110,8 @@ sub new_with_traits
 		$pass_as_ref = !!0;
 	}
 	
-	my @traits = @{ delete($args{traits}) or [] };
+	my $traits_arr = delete($args{traits}) || [];
+	my @traits     = ref($traits_arr) ? @$traits_arr : $traits_arr;
 	$class->with_traits(@traits)->new( $pass_as_ref ? \%args : %args );
 }
 
@@ -134,6 +187,20 @@ module which have C<_trait_namespace> as an attribute instead of
 a method.
 
 =back
+
+=head2 Compatibility
+
+Although called MooX::Traits, this module actually uses L<Role::Tiny>,
+so doesn't really require L<Moo>. If you use it in a non-Moo class,
+you should be able to safely consume any Role::Tiny-based traits.
+
+If you use it in a Moo class, you should also be able to consume
+Moo::Role-based traits and Moose::Role-based traits.
+
+L<Package::Variant> and L<MooseX::Role::Parameterized> roles should be
+usable; just provide a hashref of arguments:
+
+   $class->with_traits( $param_role => \%args )->new( ... )
 
 =head1 BUGS
 

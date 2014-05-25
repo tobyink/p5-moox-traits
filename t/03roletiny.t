@@ -41,6 +41,7 @@ my $constructor = sub
   package Class;
   use Role::Tiny::With;
   *new = $constructor;
+  my $x = \*new; # no warnings
   with 'MooX::Traits';
 
   package Another::Trait;
@@ -50,6 +51,7 @@ my $constructor = sub
   package Another::Class;
   use Role::Tiny::With;
   *new = $constructor;
+  $x = \*new;
   with 'MooX::Traits';
   sub _trait_namespace { 'Another' }
 }

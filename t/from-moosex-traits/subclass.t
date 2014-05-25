@@ -1,4 +1,35 @@
 ## skip Test::Tabs
+
+=pod
+
+=encoding utf-8
+
+=head1 PURPOSE
+
+Test that MooX::Traits works on subclasses of base classes that consume
+it.
+
+=head1 DEPENDENCIES
+
+This test requires L<Moo> and L<Test::Fatal>.
+Otherwise, it will be skipped.
+
+=head1 AUTHOR
+
+Toby Inkster E<lt>tobyink@cpan.orgE<gt>.
+
+Based on C<< subclass.t >> from the L<MooseX::Traits> test suite,
+by Jonathan Rockway and Karen Etheridge.
+
+=head1 COPYRIGHT AND LICENCE
+
+This software is copyright (c) 2014 by Toby Inkster, Jonathan Rockway, and Karen Etheridge.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
+
+=cut
+
 use strict;
 use warnings;
 use Test::Requires { 'Test::Fatal' => '0' };

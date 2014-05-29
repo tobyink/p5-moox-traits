@@ -5,7 +5,7 @@ use warnings;
 package MooX::Traits;
 
 our $AUTHORITY = 'cpan:TOBYINK';
-our $VERSION   = '0.002';
+our $VERSION   = '0.003';
 
 BEGIN { if ($] < 5.010000) { require UNIVERSAL::DOES } };
 

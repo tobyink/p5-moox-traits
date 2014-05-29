@@ -14,3 +14,9 @@
 			dcs:thanks cpan:GETTY;
 		];
 	].
+
+`MooX-Traits 0.003 cpan:TOBYINK`
+	issued  2014-05-29;
+	changeset [
+		item "Load UNIVERSAL::DOES on Perls older than 5.10."^^Bugfix;
+	].

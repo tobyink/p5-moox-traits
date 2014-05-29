@@ -14,85 +14,13 @@ sub _trait_namespace
 	();
 }
 
-my @keepsies;
-my $_resolve_trait = sub
-{
-	my $class = shift;
-	my ($ns, $trait, $ref) = @_;
-	my $has_ref = (@_ == 3);
-	
-	my $package = ($trait =~ /\A\+(.+)\z/)
-		? $1
-		: "$ns$trait";
-	
-	return $package unless $has_ref;
-	
-	require Module::Runtime;
-	Module::Runtime::use_package_optimistically($package);
-	
-	if ( $INC{'MooseX/Role/Parameterized.pm'} )
-	{
-		require Moose::Util;
-		my $meta = Moose::Util::find_meta($package);
-		if ($meta->can('generate_role'))
-		{
-			my $generated = $meta->generate_role(parameters => $ref);
-			push @keepsies, $generated; # prevent cleanup
-			return $generated->name;
-		}
-	}
-	
-	if ( $trait->can("make_variant") )
-	{
-		require Package::Variant;
-		return "Package::Variant"->build_variant_of(
-			$trait,
-			ref($ref) eq q(ARRAY) ? @$ref : ref($ref) eq q(HASH) ? %$ref : $$ref,
-		);
-	}
-	
-	return $trait;
-};
-
-my $toolage = sub
-{
-	my $class = shift;
-	
-	if ($INC{"Moo.pm"} and $Moo::MAKERS{$class}{is_class})
-	{
-		require Moo::Role;
-		return "Moo::Role";
-	}
-	
-	if ($INC{"Moo/Role.pm"})
-	{
-		return "Moo::Role";
-	}
-	
-	"Role::Tiny";
-};
-
 sub with_traits
 {
 	my $class = shift;
-	
 	return $class unless @_;
 	
-	my $ns = $class->_trait_namespace;
-	$ns = defined($ns) ? "$ns\::" : "";
-	
-	my @traits;
-	while (@_)
-	{
-		my $trait = shift;
-		push @traits, $class->$_resolve_trait(
-			$ns,
-			$trait,
-			ref($_[0]) ? shift : (),
-		);
-	}
-	
-	$class->$toolage->create_class_with_roles($class, @traits);
+	require MooX::Traits::Util;
+	MooX::Traits::Util::new_class_with_traits($class, @_);
 }
 
 sub new_with_traits
@@ -143,12 +71,13 @@ And a class:
    use Moo;
    with 'MooX::Traits';
 
-Apply the roles to the class at new time:
+Apply the roles to the class:
 
-   my $object = Class->with_traits('Role')->new( foo => 42 );
+   my $class = Class->with_traits('Role');
 
 Then use your customized class:
 
+   my $object = $class->new( foo => 42 );
    $object->isa('Class'); # true
    $object->does('Role'); # true
    $object->foo; # 42
@@ -208,6 +137,8 @@ Please report any bugs to
 L<http://rt.cpan.org/Dist/Display.html?Queue=MooX-Traits>.
 
 =head1 SEE ALSO
+
+L<MooX::Traits::Util>.
 
 L<Moo::Role>,
 L<Role::Tiny>.

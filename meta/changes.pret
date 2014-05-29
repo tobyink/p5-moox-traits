@@ -20,3 +20,9 @@
 	changeset [
 		item "Load UNIVERSAL::DOES on Perls older than 5.10."^^Bugfix;
 	].
+
+`MooX-Traits 0.004 cpan:TOBYINK`
+	issued  2014-05-29;
+	changeset [
+		item "MooX::Traits::Util should also load UNIVERSAL::DOES."^^Bugfix;
+	].

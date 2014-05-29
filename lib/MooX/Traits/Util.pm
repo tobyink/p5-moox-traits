@@ -74,7 +74,7 @@ sub resolve_traits
 				? $parameterize_role->($class, $trait, shift(@args))
 				: $trait
 		);
-	}	
+	}
 	return @traits;
 }
 
@@ -126,7 +126,7 @@ __END__
 
 =encoding utf-8
 
-=for stopwords MooseX MouseX prepend
+=for stopwords MooseX MouseX prepend metaclass
 
 =head1 NAME
 

@@ -4,3 +4,13 @@
 	issued  2014-05-25;
 	label   "Initial release".
 
+`MooX-Traits 0.002 cpan:TOBYINK`
+	issued  2014-05-29;
+	changeset [
+		item "Bundle a MooX::Traits::Util module, broadly similar to MooseX::Traits::Util."^^Addition;
+		item [
+			a dcs:Addition;
+			label "Provide a `new_class_with_traits_one_by_one` function.";
+			dcs:thanks cpan:GETTY;
+		];
+	];

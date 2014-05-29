@@ -5,7 +5,7 @@ use warnings;
 package MooX::Traits::Util;
 
 our $AUTHORITY = 'cpan:TOBYINK';
-our $VERSION   = '0.001';
+our $VERSION   = '0.002';
 
 use Exporter::Shiny qw(
 	new_class_with_traits

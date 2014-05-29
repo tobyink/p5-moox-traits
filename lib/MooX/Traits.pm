@@ -2,12 +2,12 @@ use 5.006;
 use strict;
 use warnings;
 
+BEGIN { if ($] < 5.010000) { require UNIVERSAL::DOES } };
+
 package MooX::Traits;
 
 our $AUTHORITY = 'cpan:TOBYINK';
 our $VERSION   = '0.003';
-
-BEGIN { if ($] < 5.010000) { require UNIVERSAL::DOES } };
 
 use Role::Tiny;
 

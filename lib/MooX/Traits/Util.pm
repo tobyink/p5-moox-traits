@@ -2,6 +2,8 @@ use 5.006;
 use strict;
 use warnings;
 
+BEGIN { if ($] < 5.010000) { require UNIVERSAL::DOES } };
+
 package MooX::Traits::Util;
 
 our $AUTHORITY = 'cpan:TOBYINK';

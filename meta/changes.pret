@@ -13,4 +13,4 @@
 			label "Provide a `new_class_with_traits_one_by_one` function.";
 			dcs:thanks cpan:GETTY;
 		];
-	];
+	].

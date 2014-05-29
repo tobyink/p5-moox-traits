@@ -7,6 +7,8 @@ package MooX::Traits;
 our $AUTHORITY = 'cpan:TOBYINK';
 our $VERSION   = '0.002';
 
+BEGIN { if ($] < 5.010000) { require UNIVERSAL::DOES } };
+
 use Role::Tiny;
 
 sub _trait_namespace

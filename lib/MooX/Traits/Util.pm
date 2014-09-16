@@ -7,7 +7,7 @@ BEGIN { if ($] < 5.010000) { require UNIVERSAL::DOES } };
 package MooX::Traits::Util;
 
 our $AUTHORITY = 'cpan:TOBYINK';
-our $VERSION   = '0.004';
+our $VERSION   = '0.005';
 
 use Exporter::Shiny qw(
 	new_class_with_traits

@@ -26,3 +26,10 @@
 	changeset [
 		item "MooX::Traits::Util should also load UNIVERSAL::DOES."^^Bugfix;
 	].
+
+`MooX-Traits 0.005 cpan:TOBYINK`
+	issued  2014-09-16;
+	changeset [
+		item "Fix repo link."^^Packaging;
+		item "Add link to #moose on IRC."^^Packaging;
+	].

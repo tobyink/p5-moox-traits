@@ -8,7 +8,7 @@
 	:homepage             <https://metacpan.org/release/MooX-Traits>;
 	:download-page        <https://metacpan.org/release/MooX-Traits>;
 	:bug-database         <http://rt.cpan.org/Dist/Display.html?Queue=MooX-Traits>;
-#	:repository           [ a :GitRepository; :browse <https://github.com/tobyink/p5-moox-traits> ];
+	:repository           [ a :GitRepository; :browse <https://github.com/tobyink/p5-moox-traits> ];
 	:created              2014-05-24;
 	:license              <http://dev.perl.org/licenses/>;
 	:maintainer           cpan:TOBYINK;
